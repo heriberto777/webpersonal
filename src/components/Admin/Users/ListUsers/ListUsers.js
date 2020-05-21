@@ -8,6 +8,7 @@ import {
   CheckSquareFilled,
 } from "@ant-design/icons";
 import Modal from "../../../Modal";
+import EditUserForm from "../EditUserForm";
 
 import "./ListUsers.scss";
 
@@ -16,7 +17,7 @@ export default function ListUsers(props) {
   const [viewUserActives, setviewUserActives] = useState(true);
   const [isVisibleModal, setisVisibleModal] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
-  const [modalContent, setmodalContent] = useState("");
+  const [modalContent, setModalContent] = useState("");
 
   return (
     <div className="list-users">
@@ -34,7 +35,7 @@ export default function ListUsers(props) {
           userActive={usersActive}
           setisVisibleModal={setisVisibleModal}
           setModalTitle={setModalTitle}
-          setmodalContent={setmodalContent}
+          setModalContent={setModalContent}
         />
       ) : (
         <UsersInactive usersInactive={usersInactive} />
@@ -45,18 +46,29 @@ export default function ListUsers(props) {
         isVisible={isVisibleModal}
         setIsVisible={setisVisibleModal}
       >
-        Hola este es mi primer modal
+        {modalContent}
       </Modal>
     </div>
   );
 }
 
 function UsersActive(props) {
-  const { userActive, setModalTitle, setmodalContent, setisVisibleModal} = props;
+  const {
+    userActive,
+    setModalTitle,
+    setModalContent,
+    setisVisibleModal,
+  } = props;
 
-  const editUser = user => {
-    setisVisibleModal(true)
-  }
+  const editUser = (user) => {
+    setisVisibleModal(true);
+    setModalTitle(
+      `Editar ${user.name ? user.name : "NoNombre"} ${
+        user.lastname ? user.lastname : "NoApellido"
+      }`
+    );
+    setModalContent(<EditUserForm user={user} />);
+  };
 
   return (
     <List
@@ -66,10 +78,7 @@ function UsersActive(props) {
       renderItem={(user) => (
         <List.Item
           actions={[
-            <Button
-              type="primary"
-              onClick={() => editUser(user._id)}
-            >
+            <Button type="primary" onClick={() => editUser(user)}>
               <EditFilled />
             </Button>,
             <Button
@@ -100,7 +109,7 @@ function UsersActive(props) {
 }
 
 function UsersInactive(props) {
-  const { usersInactive } = props;
+  const { usersInactive, setModalContent, setIsVisible } = props;
   return (
     <List
       className="user-active"

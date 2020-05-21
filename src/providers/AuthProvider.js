@@ -14,7 +14,16 @@ export default function AuthProvider(props) {
   const [user, setUser] = useState({
     user: null,
     isLoading: true,
+    logout: logoutUser,
   });
+
+  function logoutUser() {
+    setUser({
+      ...user,
+      user: null,
+    });
+    logout();
+  }
 
   useEffect(() => {
     checkUserLogin(setUser);

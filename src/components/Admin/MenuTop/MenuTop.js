@@ -7,27 +7,20 @@ import {
   MenuUnfoldOutlined,
 } from "@ant-design/icons";
 import Logo from "../../../assets/img/png/logo.png";
-import { logout } from "../../../api/auth";
+// import { logout } from "../../../api/auth";
 import useAuth from "../../../hooks/userAuth";
 import AdminSignIn from "../../../pages/Admin/SignIn";
 
 import "./MenuTop.scss";
+// import { logout } from "../../../api/auth";
 
 // <HomeFilled />
 
 export default function MenuTop(props) {
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, logoutUser } = useAuth();
   const { menuCollapsed, setMenuCollapsed } = props;
-  const [out, setOut] = useState(null);
 
-  useEffect(() => {
-      
-  }, [])
-
-  const logoutUser = () => {
-    logout();
-    setOut(true);
-  };
+  console.log(useAuth());
 
   return (
     <div className="menu-top">
@@ -38,7 +31,7 @@ export default function MenuTop(props) {
         </Button>
       </div>
       <div className="menu-top__right">
-        <Button type="link" onClick={logoutUser}>
+        <Button type="link">
           <PoweroffOutlined />
         </Button>
       </div>

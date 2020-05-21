@@ -23,7 +23,7 @@ export function getRefreshTokenApi() {
 }
 
 export function refreshAccessTokenApi(refreshToken) {
-  const url = `${basePath}/${apiVersion}/refresh-access=token`;
+  const url = `${basePath}/${apiVersion}/refresh-access-token`;
   const bodyObj = {
     refreshToken: refreshToken,
   };
@@ -46,6 +46,7 @@ export function refreshAccessTokenApi(refreshToken) {
     .then((result) => {
       if (!result) {
         // TO DO: delogear usuario
+        logout();
       } else {
         const { accessToken, refreshToken } = result;
         localStorage.setItem(ACCESS_TOKEN, accessToken);
