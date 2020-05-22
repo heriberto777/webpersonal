@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Switch, List, Avatar, Button } from "antd";
 import NoAvatar from "../../../../assets/img/png/no-avatar.png";
 import {
@@ -9,6 +9,7 @@ import {
 } from "@ant-design/icons";
 import Modal from "../../../Modal";
 import EditUserForm from "../EditUserForm";
+import { getAvatarApi } from "../../../../api/user";
 
 import "./ListUsers.scss";
 
@@ -75,39 +76,49 @@ function UsersActive(props) {
       className="user-active"
       itemLayout="horizontal"
       dataSource={userActive}
-      renderItem={(user) => (
-        <List.Item
-          actions={[
-            <Button type="primary" onClick={() => editUser(user)}>
-              <EditFilled />
-            </Button>,
-            <Button
-              type="danger"
-              onClick={() => console.log("Desactivar Usuario")}
-            >
-              <StopFilled />
-            </Button>,
-            <Button
-              type="danger"
-              onClick={() => console.log("Eliminar Usuariuo")}
-            >
-              <DeleteFilled />
-            </Button>,
-          ]}
-        >
-          <List.Item.Meta
-            avatar={<Avatar src={user.avatar ? user.avatar : NoAvatar} />}
-            title={`${user.name ? user.name : "..."}
-                    ${user.lastName ? user.lastName : "...."}
-            `}
-            description={user.email}
-          />
-        </List.Item>
-      )}
+      renderItem={(user) => <UserActive user={user} editUser={editUser} />}
     />
   );
 }
 
+function UserActive(props) {
+  const { user, editUser } = props;
+  const [avatar, setAvatar] = useState(null);
+
+  useEffect(() => {
+    if (user.avatar) {
+      getAvatarApi(user.avatar).then((response) => {
+        setAvatar(response);
+      });
+    } else {
+      setAvatar(null);
+    }
+  }, [user]);
+
+  return (
+    <List.Item
+      actions={[
+        <Button type="primary" onClick={() => editUser(user)}>
+          <EditFilled />
+        </Button>,
+        <Button type="danger" onClick={() => console.log("Desactivar Usuario")}>
+          <StopFilled />
+        </Button>,
+        <Button type="danger" onClick={() => console.log("Eliminar Usuariuo")}>
+          <DeleteFilled />
+        </Button>,
+      ]}
+    >
+      <List.Item.Meta
+        avatar={<Avatar src={avatar ? avatar : NoAvatar} />}
+        title={`${user.name ? user.name : "..."}
+                    ${user.lastName ? user.lastName : "...."}
+            `}
+        description={user.email}
+      />
+    </List.Item>
+  );
+}
 function UsersInactive(props) {
   const { usersInactive, setModalContent, setIsVisible } = props;
   return (
@@ -115,33 +126,44 @@ function UsersInactive(props) {
       className="user-active"
       itemLayout="horizontal"
       dataSource={usersInactive}
-      renderItem={(user) => (
-        <List.Item
-          actions={[
-            <Button
-              type="primary"
-              onClick={() => console.log("Editar Usuariuo")}
-            >
-              <CheckSquareFilled />
-            </Button>,
-
-            <Button
-              type="danger"
-              onClick={() => console.log("Eliminar Usuariuo")}
-            >
-              <DeleteFilled />
-            </Button>,
-          ]}
-        >
-          <List.Item.Meta
-            avatar={<Avatar src={user.avatar ? user.avatar : NoAvatar} />}
-            title={`${user.name ? user.name : "..."}
-                    ${user.lastName ? user.lastName : "...."}
-            `}
-            description={user.email}
-          />
-        </List.Item>
-      )}
+      renderItem={(user) => <UserInactive user={user} />}
     />
+  );
+}
+
+function UserInactive(props) {
+  const { user } = props;
+  const [avatar, setAvatar] = useState(null);
+
+  useEffect(() => {
+    if (user.avatar) {
+      getAvatarApi(user.avatar).then((response) => {
+        setAvatar(response);
+      });
+    } else {
+      setAvatar(null);
+    }
+  }, [user]);
+
+  return (
+    <List.Item
+      actions={[
+        <Button type="primary" onClick={() => console.log("Editar Usuariuo")}>
+          <CheckSquareFilled />
+        </Button>,
+
+        <Button type="danger" onClick={() => console.log("Eliminar Usuariuo")}>
+          <DeleteFilled />
+        </Button>,
+      ]}
+    >
+      <List.Item.Meta
+        avatar={<Avatar src={avatar ? avatar : NoAvatar} />}
+        title={`${user.name ? user.name : "..."}
+              ${user.lastName ? user.lastName : "...."}
+      `}
+        description={user.email}
+      />
+    </List.Item>
   );
 }
