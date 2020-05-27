@@ -12,9 +12,9 @@ export default function LayoutAdmin(props) {
   const { routes } = props;
   const [menuCollapsed, setMenuCollapsed] = useState(false);
   const { Header, Footer, Content } = Layout;
-  const { user, isLoading } = useAuth();
+  const { user, isLoading, logout } = useAuth();
 
-  // console.log(user);
+  // console.log(useAuth());
 
   // const user = null;
 
@@ -39,6 +39,7 @@ export default function LayoutAdmin(props) {
             <MenuTop
               menuCollapsed={menuCollapsed}
               setMenuCollapsed={setMenuCollapsed}
+              logoutUser={logout}
             />
           </Header>
           <Content className="layout-admin__content">

@@ -62,12 +62,9 @@ export function refreshAccessTokenApi(refreshToken) {
 }
 
 export function logout() {
-  // const accessToken = localStorage.getItem(ACCESS_TOKEN);
-  // if(!accessToken){
-  //   return
-  // }
   localStorage.removeItem(ACCESS_TOKEN);
   localStorage.removeItem(REFRESH_TOKEN);
+  // history.push("/admin");
 }
 
 function willExpireToken(token) {
@@ -77,9 +74,4 @@ function willExpireToken(token) {
   const { exp } = metaToken;
   const now = (Date.now() + seconds) / 1000;
   return now > exp;
-}
-
-function logOut() {
-  localStorage.removeItem(ACCESS_TOKEN);
-  localStorage.removeItem(REFRESH_TOKEN);
 }

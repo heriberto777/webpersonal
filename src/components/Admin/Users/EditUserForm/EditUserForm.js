@@ -52,18 +52,61 @@ export default function EditUserForm(props) {
     }
   }, [avatar]);
 
-  const udateUser = (e) => {
-    e.preventDefault();
-    console.log(userData);
+  const updateUser = () => {
+    // e.preventDefault();
+    const token = getAccessTokenApi();
+    let userUpdate = userData;
+
+    if (userUpdate.password || userUpdate.repeatPassword) {
+      if (userUpdate.password !== userUpdate.repeatPassword) {
+        notification["error"]({
+          message: "Las contraseñas tienen que ser iguales.",
+        });
+        return;
+      } else {
+        delete userUpdate.repeatPassword;
+      }
+    }
+
+    if (!userUpdate.name || !userUpdate.lastname || !userUpdate.email) {
+      notification["error"]({
+        message: "El nombre, apellidos y email son obligatorios.",
+      });
+      return;
+    }
+
+    if (typeof userUpdate.avatar === "object") {
+      uploadAvatarApi(token, userUpdate.avatar, user._id).then((response) => {
+        userUpdate.avatar = response.avatarName;
+        updateUserApi(token, userUpdate, user._id).then((result) => {
+          // console.log(response);
+
+          notification["success"]({
+            message: result,
+          });
+          setIsVisibleModal(false);
+          setReloadUsers(true);
+        });
+      });
+    } else {
+      updateUserApi(token, userUpdate, user._id).then((result) => {
+        console.log(result);
+        notification["success"]({
+          message: result,
+        });
+        setIsVisibleModal(false);
+        setReloadUsers(true);
+      });
+    }
   };
-  //   console.log(user);
+
   return (
     <div className="edit-user-form">
       <UploadAdvatar avatar={avatar} setAvatar={setAvatar} />
       <EditForm
         userData={userData}
         setUserData={setUserData}
-        udateUser={udateUser}
+        updateUser={updateUser}
       />
     </div>
   );
@@ -118,12 +161,12 @@ function EditForm(props) {
   const { Option } = Select;
 
   return (
-    <Form className="form-edit" onSubmit={updateUser}>
+    <Form className="form-edit" onFinish={updateUser}>
       <Row gutter={24}>
         <Col span={12}>
           <Form.Item>
             <Input
-              prefix={<UserOutlined />}
+              // prefix={<Icon type="user" />}
               placeholder="Nombre"
               value={userData.name}
               onChange={(e) =>
@@ -135,7 +178,7 @@ function EditForm(props) {
         <Col span={12}>
           <Form.Item>
             <Input
-              prefix={<UserOutlined />}
+              // prefix={<Icon type="user" />}
               placeholder="Apellidos"
               value={userData.lastname}
               onChange={(e) =>
@@ -150,7 +193,7 @@ function EditForm(props) {
         <Col span={12}>
           <Form.Item>
             <Input
-              prefix={<MailOutlined />}
+              // prefix={<Icon type="mail" />}
               placeholder="Correo electronico"
               value={userData.email}
               onChange={(e) =>
@@ -178,7 +221,7 @@ function EditForm(props) {
         <Col span={12}>
           <Form.Item>
             <Input
-              prefix={<LockOutlined />}
+              // prefix={<Icon type="lock" />}
               type="password"
               placeholder="Contraseña"
               onChange={(e) =>
@@ -190,7 +233,7 @@ function EditForm(props) {
         <Col span={12}>
           <Form.Item>
             <Input
-              prefix={<LockOutlined />}
+              // prefix={<Icon type="lock" />}
               type="password"
               placeholder="Repetir contraseña"
               onChange={(e) =>

@@ -9,18 +9,20 @@ import {
 import Logo from "../../../assets/img/png/logo.png";
 // import { logout } from "../../../api/auth";
 import useAuth from "../../../hooks/userAuth";
-import AdminSignIn from "../../../pages/Admin/SignIn";
+import history from "../../../utils/history";
 
 import "./MenuTop.scss";
-// import { logout } from "../../../api/auth";
-
-// <HomeFilled />
 
 export default function MenuTop(props) {
-  const { user, isLoading, logoutUser } = useAuth();
+  const { user, isLoading, logout } = useAuth();
   const { menuCollapsed, setMenuCollapsed } = props;
 
   console.log(useAuth());
+
+  const logoutUser = () => {
+    // logout();
+    // history.push("/admin");
+  };
 
   return (
     <div className="menu-top">
@@ -31,7 +33,7 @@ export default function MenuTop(props) {
         </Button>
       </div>
       <div className="menu-top__right">
-        <Button type="link">
+        <Button type="link" onClick={logoutUser}>
           <PoweroffOutlined />
         </Button>
       </div>

@@ -19,7 +19,7 @@ export default function LoginForm() {
     });
   };
 
-  const login = async (e) => {
+  const login = async () => {
     const result = await signInApi(inputs);
 
     if (result.message) {

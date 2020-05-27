@@ -8,14 +8,13 @@ import "./App.scss";
 function App() {
   return (
     <AuthProvider>
-    <Router>
-      <Switch>
-        {routes.map((route, index) => (
-          <RouteWithSubRoutes key={index} {...route} />
-        ))}
-      </Switch>
-    </Router>
-
+      <Router>
+        <Switch>
+          {routes.map((route, index) => (
+            <RouteWithSubRoutes key={index} {...route} />
+          ))}
+        </Switch>
+      </Router>
     </AuthProvider>
   );
 }
